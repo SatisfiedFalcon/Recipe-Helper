@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RecipeHelper – Discover. Cook. Master.</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- ══════════════════════════════════
+       AUTH MODAL
+  ══════════════════════════════════ -->
+  <div class="auth-overlay" id="authOverlay">
+    <div class="auth-box" id="authBox">
+      <button class="auth-close" onclick="closeAuth()">✕</button>
+
+      <!-- Logo -->
+      <div class="auth-logo">
+        <span class="logo-icon">🍳</span>
+        <span class="logo-text">Recipe<em>Helper</em></span>
+      </div>
+
+      <!-- Sign In Panel -->
+      <div class="auth-panel" id="authSignIn">
+        <h2 class="auth-title">Welcome back</h2>
+        <p class="auth-sub">Sign in to get personalized recipe recommendations</p>
+
+        <button class="btn-google" onclick="signInWithGoogle()">
+          <svg width="18" height="18" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+          Continue with Google
+        </button>
+
+        <div class="auth-divider"><span>or</span></div>
+
+        <div class="auth-field">
+          <label>Email</label>
+          <input type="email" id="signInEmail" placeholder="you@email.com" />
+        </div>
+        <div class="auth-field">
+          <label>Password</label>
+          <input type="password" id="signInPassword" placeholder="••••••••" />
+        </div>
+        <div id="authError" class="auth-error"></div>
+        <button class="btn-auth-submit" onclick="signInEmail()">Sign In</button>
+        <p class="auth-switch">Don't have an account? <a onclick="showAuthPanel('register')">Create one →</a></p>
+      </div>
+
+      <!-- Register Panel -->
+      <div class="auth-panel hidden" id="authRegister">
+        <h2 class="auth-title">Create account</h2>
+        <p class="auth-sub">Join thousands of home cooks discovering new recipes daily</p>
+
+        <button class="btn-google" onclick="signInWithGoogle()">
+          <svg width="18" height="18" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+          Sign up with Google
+        </button>
+
+        <div class="auth-divider"><span>or</span></div>
+
+        <div class="auth-field">
+          <label>Display Name</label>
+          <input type="text" id="regName" placeholder="Your name" />
+        </div>
+        <div class="auth-field">
+          <label>Email</label>
+          <input type="email" id="regEmail" placeholder="you@email.com" />
+        </div>
+        <div class="auth-field">
+          <label>Password</label>
+          <input type="password" id="regPassword" placeholder="Min 6 characters" />
+        </div>
+        <div id="authErrorReg" class="auth-error"></div>
+        <button class="btn-auth-submit" onclick="registerEmail()">Create Account</button>
+        <p class="auth-switch">Already have an account? <a onclick="showAuthPanel('signin')">Sign in →</a></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════
+       PREFERENCES ONBOARDING
+  ══════════════════════════════════ -->
+  <div class="pref-overlay" id="prefOverlay">
+    <div class="pref-box">
+      <div class="pref-step" id="prefStep1">
+        <div class="pref-emoji">🌍</div>
+        <h2>What cuisines do you love?</h2>
+        <p>Pick all that appeal to you</p>
+        <div class="pref-grid" id="prefCuisines">
+          <button class="pref-chip" data-val="Italian">🇮🇹 Italian</button>
+          <button class="pref-chip" data-val="Asian">🍜 Asian</button>
+          <button class="pref-chip" data-val="American">🇺🇸 American</button>
+          <button class="pref-chip" data-val="French">🇫🇷 French</button>
+          <button class="pref-chip" data-val="Mediterranean">🫒 Mediterranean</button>
+          <button class="pref-chip" data-val="Mexican">🇲🇽 Mexican</button>
+          <button class="pref-chip" data-val="Indian">🇮🇳 Indian</button>
+        </div>
+        <button class="btn-pref-next" onclick="prefNext(1)">Next →</button>
+      </div>
+
+      <div class="pref-step hidden" id="prefStep2">
+        <div class="pref-emoji">👨‍🍳</div>
+        <h2>What's your cooking level?</h2>
+        <p>Be honest — we'll tailor recipes to match</p>
+        <div class="pref-grid" id="prefLevel">
+          <button class="pref-chip pref-single" data-val="beginner">🟢 Beginner<br><small>Just starting out</small></button>
+          <button class="pref-chip pref-single" data-val="intermediate">🟡 Intermediate<br><small>Comfortable in the kitchen</small></button>
+          <button class="pref-chip pref-single" data-val="pro">🔴 Pro<br><small>Bring on the challenge</small></button>
+        </div>
+        <button class="btn-pref-next" onclick="prefNext(2)">Next →</button>
+      </div>
+
+      <div class="pref-step hidden" id="prefStep3">
+        <div class="pref-emoji">⚡</div>
+        <h2>Any dietary preferences?</h2>
+        <p>Pick any that apply</p>
+        <div class="pref-grid" id="prefDiet">
+          <button class="pref-chip" data-val="quick">⚡ Quick meals</button>
+          <button class="pref-chip" data-val="budget">💰 Budget-friendly</button>
+          <button class="pref-chip" data-val="vegan">🥗 Vegan / Vegetarian</button>
+          <button class="pref-chip" data-val="high-protein">💪 High Protein</button>
+          <button class="pref-chip" data-val="comfort">🛋️ Comfort food</button>
+          <button class="pref-chip" data-val="healthy">🥦 Healthy</button>
+        </div>
+        <button class="btn-pref-next" onclick="prefDone()">Start Cooking 🍳</button>
+      </div>
+
+      <div class="pref-progress">
+        <div class="pref-dot active" id="pdot1"></div>
+        <div class="pref-dot" id="pdot2"></div>
+        <div class="pref-dot" id="pdot3"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════
+       NAVIGATION
+  ══════════════════════════════════ -->
+  <nav id="navbar">
+    <div class="nav-inner">
+      <div class="nav-logo" onclick="showPage('home')">
+        <span class="logo-icon">🍳</span>
+        <span class="logo-text">Recipe<em>Helper</em></span>
+      </div>
+      <ul class="nav-links">
+        <li><a onclick="showPage('home')" class="nav-link active" data-page="home">Home</a></li>
+        <li><a onclick="showPage('browse')" class="nav-link" data-page="browse">Browse</a></li>
+        <li><a onclick="showPage('trending')" class="nav-link" data-page="trending">Trending</a></li>
+        <li><a onclick="showPage('ai')" class="nav-link" data-page="ai">AI Helper</a></li>
+      </ul>
+      <div class="nav-actions">
+        <button class="btn-search-icon" onclick="toggleSearch()" title="Search">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        </button>
+        <button class="btn-favs" onclick="showPage('favourites')" title="Favourites">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          <span class="fav-count" id="favCount">0</span>
+        </button>
+        <!-- User avatar / sign in button -->
+        <div class="nav-user" id="navUser">
+          <button class="btn-sign-in" onclick="openAuth()">Sign In</button>
+        </div>
+      </div>
+    </div>
+    <!-- Search bar dropdown -->
+    <div class="search-dropdown" id="searchDropdown">
+      <div class="search-inner">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        <input type="text" id="globalSearch" placeholder="Search recipes, cuisines, ingredients…" oninput="liveSearch(this.value)" />
+        <button onclick="clearSearch()">✕</button>
+      </div>
+      <div id="searchResults" class="search-results-drop"></div>
+    </div>
+  </nav>
+
+  <!-- ══════════════════════════════════
+       PAGE: HOME
+  ══════════════════════════════════ -->
+  <div id="page-home" class="page active">
+
+    <!-- Hero -->
+    <section class="hero" id="hero">
+      <div class="hero-slides" id="heroSlides"></div>
+      <div class="hero-overlay"></div>
+      <div class="hero-content">
+        <div class="hero-eyebrow">🌍 From Every Corner of the World</div>
+        <h1 class="hero-title">Cook Anything.<br/><em>Master Everything.</em></h1>
+        <p class="hero-sub">Step-by-step recipes for every skill level — beginner to pro. Real food, real photos, real results.</p>
+        <div class="hero-cta-row">
+          <button class="btn-primary" onclick="showPage('browse')">Explore Recipes</button>
+          <button class="btn-ghost" onclick="showPage('ai')">🤖 Ask AI Helper</button>
+        </div>
+        <div class="hero-quick-tags" id="heroQuickTags"></div>
+      </div>
+      <div class="hero-scroll-hint">
+        <span>scroll</span>
+        <div class="scroll-line"></div>
+      </div>
+    </section>
+
+    <!-- PERSONALIZED ROW — only shows when logged in -->
+    <section class="home-section personalized-section" id="personalizedSection" style="display:none">
+      <div class="section-header">
+        <div class="section-title-wrap">
+          <span class="section-label" id="personalizedLabel">✨ Just for You</span>
+          <h2 class="section-title" id="personalizedTitle">Your Recommendations</h2>
+        </div>
+        <button class="btn-see-all" onclick="showPage('browse')">See All →</button>
+      </div>
+      <div class="cards-row" id="personalizedRow"></div>
+    </section>
+
+    <!-- Continue Watching / Recently Viewed -->
+    <section class="home-section" id="recentSection" style="display:none">
+      <div class="section-header">
+        <div class="section-title-wrap">
+          <span class="section-label">🕐 Pick Up Where You Left Off</span>
+          <h2 class="section-title">Recently Viewed</h2>
+        </div>
+      </div>
+      <div class="cards-row" id="recentRow"></div>
+    </section>
+
+    <!-- Featured / Editor's Pick -->
+    <section class="home-section">
+      <div class="section-header">
+        <div class="section-title-wrap">
+          <span class="section-label">⭐ Editor's Pick</span>
+          <h2 class="section-title">Featured This Week</h2>
+        </div>
+        <button class="btn-see-all" onclick="showPage('browse')">See All →</button>
+      </div>
+      <div class="cards-row featured-row" id="featuredRow"></div>
+    </section>
+
+    <!-- Trending -->
+    <section class="home-section trending-section">
+      <div class="section-header">
+        <div class="section-title-wrap">
+          <span class="section-label">🔥 Hot Right Now</span>
+          <h2 class="section-title">Trending Recipes</h2>
+        </div>
+        <button class="btn-see-all" onclick="showPage('trending')">See All →</button>
+      </div>
+      <div class="cards-row" id="trendingRow"></div>
+    </section>
+
+    <!-- Because you liked... (shows when user has history) -->
+    <section class="home-section" id="becauseSection" style="display:none">
+      <div class="section-header">
+        <div class="section-title-wrap">
+          <span class="section-label">💡 Based on Your Tastes</span>
+          <h2 class="section-title" id="becauseTitle">More Like This</h2>
+        </div>
+      </div>
+      <div class="cards-row" id="becauseRow"></div>
+    </section>
+
+    <!-- By Cuisine -->
+    <section class="home-section">
+      <div class="section-header">
+        <div class="section-title-wrap">
+          <span class="section-label">🌍 Explore Origins</span>
+          <h2 class="section-title">Browse by Cuisine</h2>
+        </div>
+      </div>
+      <div class="cuisine-grid" id="cuisineGrid"></div>
+    </section>
+
+    <!-- Beginner Friendly -->
+    <section class="home-section">
+      <div class="section-header">
+        <div class="section-title-wrap">
+          <span class="section-label">🟢 Start Here</span>
+          <h2 class="section-title">Perfect for Beginners</h2>
+        </div>
+        <button class="btn-see-all" onclick="filterBrowse('beginner')">See All →</button>
+      </div>
+      <div class="cards-row" id="beginnerRow"></div>
+    </section>
+
+    <!-- Quick Meals -->
+    <section class="home-section">
+      <div class="section-header">
+        <div class="section-title-wrap">
+          <span class="section-label">⚡ In a Rush?</span>
+          <h2 class="section-title">Under 15 Minutes</h2>
+        </div>
+        <button class="btn-see-all" onclick="filterBrowse('quick')">See All →</button>
+      </div>
+      <div class="cards-row" id="quickRow"></div>
+    </section>
+
+    <!-- Budget Meals -->
+    <section class="home-section">
+      <div class="section-header">
+        <div class="section-title-wrap">
+          <span class="section-label">💰 Save Money</span>
+          <h2 class="section-title">Budget Under $5</h2>
+        </div>
+        <button class="btn-see-all" onclick="filterBrowse('budget')">See All →</button>
+      </div>
+      <div class="cards-row" id="budgetRow"></div>
+    </section>
+
+    <!-- New Arrivals — Chief feeds this automatically -->
+    <section class="home-section">
+      <div class="section-header">
+        <div class="section-title-wrap">
+          <span class="section-label">🆕 Fresh In</span>
+          <h2 class="section-title">Newly Added</h2>
+        </div>
+        <button class="btn-see-all" onclick="showPage('browse')">See All →</button>
+      </div>
+      <div class="cards-row" id="newRow"></div>
+    </section>
+
+    <!-- AI Promo Banner -->
+    <section class="ai-promo-banner">
+      <div class="ai-promo-content">
+        <div class="ai-promo-icon">🤖</div>
+        <div class="ai-promo-text">
+          <h3>Not sure what to cook?</h3>
+          <p>Tell our AI what ingredients you have, your skill level, or just describe what you're craving — it'll find the perfect recipe for you.</p>
+        </div>
+        <button class="btn-primary" onclick="showPage('ai')">Try AI Helper →</button>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- ══════════════════════════════════
+       PAGE: BROWSE
+  ══════════════════════════════════ -->
+  <div id="page-browse" class="page">
+    <div class="page-hero-mini">
+      <h1>Browse All Recipes</h1>
+      <p>Filter by cuisine, difficulty, time, or cost</p>
+    </div>
+    <div class="browse-controls">
+      <div class="filter-row">
+        <button class="filter-chip active" data-filter="all" onclick="setBrowseFilter('all',this)">All</button>
+        <button class="filter-chip" data-filter="cuisine:Italian" onclick="setBrowseFilter('cuisine:Italian',this)">🇮🇹 Italian</button>
+        <button class="filter-chip" data-filter="cuisine:Asian" onclick="setBrowseFilter('cuisine:Asian',this)">🍜 Asian</button>
+        <button class="filter-chip" data-filter="cuisine:American" onclick="setBrowseFilter('cuisine:American',this)">🍔 American</button>
+        <button class="filter-chip" data-filter="cuisine:French" onclick="setBrowseFilter('cuisine:French',this)">🥐 French</button>
+        <button class="filter-chip" data-filter="cuisine:Mediterranean" onclick="setBrowseFilter('cuisine:Mediterranean',this)">🫒 Mediterranean</button>
+        <button class="filter-chip" data-filter="cuisine:Mexican" onclick="setBrowseFilter('cuisine:Mexican',this)">🌮 Mexican</button>
+        <button class="filter-chip" data-filter="cuisine:Indian" onclick="setBrowseFilter('cuisine:Indian',this)">🍛 Indian</button>
+        <button class="filter-chip" data-filter="diff:beginner" onclick="setBrowseFilter('diff:beginner',this)">🟢 Beginner</button>
+        <button class="filter-chip" data-filter="diff:intermediate" onclick="setBrowseFilter('diff:intermediate',this)">🟡 Intermediate</button>
+        <button class="filter-chip" data-filter="diff:pro" onclick="setBrowseFilter('diff:pro',this)">🔴 Pro</button>
+        <button class="filter-chip" data-filter="tag:quick" onclick="setBrowseFilter('tag:quick',this)">⚡ Quick</button>
+        <button class="filter-chip" data-filter="tag:budget" onclick="setBrowseFilter('tag:budget',this)">💰 Budget</button>
+      </div>
+    </div>
+    <div class="browse-grid-wrap">
+      <div class="cards-grid" id="browseGrid"></div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════
+       PAGE: TRENDING
+  ══════════════════════════════════ -->
+  <div id="page-trending" class="page">
+    <div class="page-hero-mini">
+      <h1>🔥 Trending Now</h1>
+      <p>The most viewed and saved recipes this week</p>
+    </div>
+    <div class="trending-ranked" id="trendingRanked"></div>
+  </div>
+
+  <!-- ══════════════════════════════════
+       PAGE: AI HELPER
+  ══════════════════════════════════ -->
+  <div id="page-ai" class="page">
+    <div class="ai-page-wrap">
+      <div class="ai-page-header">
+        <div class="ai-avatar-big">🤖</div>
+        <h1>AI Recipe Helper</h1>
+        <p>Describe what you want, list ingredients you have, or ask any cooking question. I'll find the perfect recipe for you.</p>
+      </div>
+      <div class="ai-chat-container">
+        <div class="ai-chat-window" id="aiChatWindow">
+          <div class="ai-message ai">
+            <div class="ai-avatar">🤖</div>
+            <div class="ai-bubble">
+              Hey! 👋 I'm your personal recipe assistant.<br/><br/>
+              You can tell me things like:<br/>
+              <em>"I have eggs, rice and garlic"</em><br/>
+              <em>"Something quick under 15 minutes"</em><br/>
+              <em>"An easy Italian pasta for beginners"</em><br/>
+              <em>"A spicy Asian dish for intermediate cooks"</em><br/><br/>
+              What are you in the mood for?
+            </div>
+          </div>
+        </div>
+        <div class="ai-suggestions-row" id="aiSuggestionsRow"></div>
+        <div class="ai-input-area">
+          <div class="ai-input-wrap">
+            <input type="text" id="aiInput" placeholder="Describe what you want to cook…" onkeydown="if(event.key==='Enter')sendAI()" />
+            <button class="ai-send-btn" onclick="sendAI()">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════
+       PAGE: FAVOURITES
+  ══════════════════════════════════ -->
+  <div id="page-favourites" class="page">
+    <div class="page-hero-mini">
+      <h1>❤️ Your Favourites</h1>
+      <p>Recipes you've saved for later</p>
+    </div>
+    <div class="cards-grid" id="favsGrid">
+      <div class="empty-state">
+        <div class="empty-icon">🍽️</div>
+        <h3>No favourites yet</h3>
+        <p>Tap the heart on any recipe to save it here.</p>
+        <button class="btn-primary" onclick="showPage('browse')">Browse Recipes</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════
+       PAGE: PROFILE
+  ══════════════════════════════════ -->
+  <div id="page-profile" class="page">
+    <div class="page-hero-mini">
+      <h1>👤 Your Profile</h1>
+      <p>Manage your account and preferences</p>
+    </div>
+    <div class="profile-wrap">
+      <div class="profile-card">
+        <div class="profile-avatar" id="profileAvatar">?</div>
+        <div class="profile-info">
+          <div class="profile-name" id="profileName">Guest</div>
+          <div class="profile-email" id="profileEmail">Not signed in</div>
+        </div>
+        <button class="btn-edit-prefs" onclick="openPrefs()">✏️ Edit Preferences</button>
+        <button class="btn-sign-out" onclick="signOut()">Sign Out</button>
+      </div>
+
+      <div class="profile-stats">
+        <div class="pstat"><div class="pstat-num" id="statFavs">0</div><div class="pstat-label">Favourites</div></div>
+        <div class="pstat"><div class="pstat-num" id="statViewed">0</div><div class="pstat-label">Recipes Viewed</div></div>
+        <div class="pstat"><div class="pstat-num" id="statCuisines">0</div><div class="pstat-label">Cuisines Tried</div></div>
+      </div>
+
+      <div class="profile-prefs-display" id="profilePrefsDisplay"></div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════
+       RECIPE DETAIL MODAL
+  ══════════════════════════════════ -->
+  <div class="modal-overlay" id="modalOverlay" onclick="if(event.target===this)closeModal()">
+    <div class="modal-box" id="modalBox">
+      <button class="modal-close" onclick="closeModal()">✕</button>
+      <div class="modal-hero" id="modalHero"></div>
+      <div class="modal-body">
+        <div class="origin-banner" id="originBanner"></div>
+        <div class="modal-top">
+          <div>
+            <div class="modal-cuisine" id="modalCuisine"></div>
+            <h2 class="modal-title" id="modalTitle"></h2>
+            <div class="modal-meta-row" id="modalMeta"></div>
+          </div>
+          <button class="modal-fav-btn" id="modalFavBtn" onclick="toggleFavModal()"></button>
+        </div>
+        <p class="modal-description" id="modalDesc"></p>
+        <div class="modal-tabs">
+          <button class="mtab active" onclick="switchModalTab(0,this)">📋 Ingredients</button>
+          <button class="mtab" onclick="switchModalTab(1,this)">👨‍🍳 Method</button>
+          <button class="mtab" onclick="switchModalTab(2,this)">💡 Alternatives</button>
+          <button class="mtab" onclick="switchModalTab(3,this)">⭐ Reviews</button>
+        </div>
+        <div class="modal-tab-panel active" id="mtab0"></div>
+        <div class="modal-tab-panel" id="mtab1"></div>
+        <div class="modal-tab-panel" id="mtab2"></div>
+        <div class="modal-tab-panel" id="mtab3"></div>
+        <div class="similar-section">
+          <h3 class="similar-title">🍽 You Might Also Like</h3>
+          <div class="similar-strip" id="similarStrip"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST -->
+  <div id="toast"></div>
+
+  <!-- Firebase SDK — uses compat version, no backend setup needed for auth -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+
+  <script src="app.js"></script>
+</body>
+</html>
